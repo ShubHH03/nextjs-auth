@@ -13,15 +13,38 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 
 export default function SignupPage() {
-  const [user, setUser] = React.useState({
+  const router = useRouter();
+  const [user, setUser] = useState({
     email: "",
     password: "",
     username: "",
   });
 
-  const onSignup = async () => {};
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const onSignup = async () => {
+    try {
+      
+    } catch (error) {
+      
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if(user.email.length > 0 && user.password.length > 0 && user.username.length > 0){
+      setButtonDisabled(false);
+    }
+    else{
+      setButtonDisabled(true);
+    }
+  }, [user]);
+
   return (
     <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-background to-muted/20">
       <div className="w-full max-w-md">
@@ -77,19 +100,21 @@ export default function SignupPage() {
                   }
                   placeholder="******"
                 />
-                <FieldDescription>
-                  Must be at least 6 characters long.
-                </FieldDescription>
               </Field>
             </FieldGroup>
           </FieldSet>
 
           {/* Button */}
-          <div className="mt-6">
-            <Button onClick={onSignup} className="w-full" size="lg">
-              Sign Up
+            <div className="mt-6">
+            <Button 
+              onClick={onSignup} 
+              className="w-full cursor-pointer" 
+              size="lg"
+              disabled={buttonDisabled}
+            >
+              Signup
             </Button>
-          </div>
+            </div>
 
           {/* Footer */}
           <div className="mt-6 text-center text-sm text-muted-foreground">

@@ -13,12 +13,24 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useState, useEffect} from "react";
 
 export default function LoginPage() {
   const [user, setUser] = React.useState({
     email: "",
     password: "",
   });
+
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+
+    useEffect(() => {
+      if(user.email.length > 0 && user.password.length > 0 ){
+        setButtonDisabled(false);
+      }
+      else{
+        setButtonDisabled(true);
+      }
+    }, [user]);
 
   const onLogin = async () => {};
   return (
@@ -66,7 +78,7 @@ export default function LoginPage() {
 
           {/* Button */}
           <div className="mt-6">
-            <Button onClick={onLogin} className="w-full" size="lg">
+            <Button onClick={onLogin} className="w-full cursor-pointer" size="lg" disabled={buttonDisabled}>
               Log In
             </Button>
           </div>
