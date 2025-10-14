@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema(
       required: [true, "Password is required"],
       minlength: [6, "Password must be at least 6 characters long"],
     },
-    isVerfied: {
+    isVerified: {
       type: Boolean,
       default: false,
     },
@@ -35,6 +35,6 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-const User = mongoose.models.users || mongoose.model("User", userSchema);
+const User = mongoose.models.users || mongoose.model("users", userSchema);
 
 export default User;

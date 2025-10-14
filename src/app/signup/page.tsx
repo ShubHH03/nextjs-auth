@@ -14,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -28,9 +29,19 @@ export default function SignupPage() {
 
   const onSignup = async () => {
     try {
+      setLoading(true);
+      const response = await axios.post("/api/users/signup", user);
+      console.log("Signup response:", response.data);
+      toast.success("Signup successful! Please log in.");
+      router.push("/login");
+
+    } catch (error: any) {
+      console.log("Error during signup:", error);
       
-    } catch (error) {
-      
+      // Display specific error message from backend
+      const errorMessage = error.response?.data?.message || "Signup failed. Please try again.";
+      toast.error(errorMessage);
+
     } finally {
       setLoading(false);
     }
@@ -73,9 +84,6 @@ export default function SignupPage() {
                   }
                   placeholder="Max Leiter"
                 />
-                <FieldDescription>
-                  Choose a unique username for your account.
-                </FieldDescription>
               </Field>
 
               <Field>
@@ -112,7 +120,7 @@ export default function SignupPage() {
               size="lg"
               disabled={buttonDisabled}
             >
-              Signup
+              {loading ? "Processing..." : "Sign Up"}
             </Button>
             </div>
 
@@ -123,7 +131,7 @@ export default function SignupPage() {
               href="/login"
               className="text-primary font-medium hover:underline"
             >
-              Log in
+              Log In
             </Link>
           </div>
         </div>

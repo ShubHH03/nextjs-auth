@@ -9,13 +9,25 @@ export async function POST(request: Request) {
   try {
     const { username, email, password } = await request.json();
 
-    // check if user already exists
-    const user = await User.findOne({ email });
-    if (user) {
+    // check if user already exists with username
+    const existingUserByUsername = await User.findOne({ username });
+    if (existingUserByUsername) {
       return NextResponse.json(
         {
           success: false,
-          message: "User already exists",
+          message: "Username is already taken",
+        },
+        { status: 400 }
+      );
+    }
+
+    // check if user already exists with email
+    const existingUserByEmail = await User.findOne({ email });
+    if (existingUserByEmail) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "User already exists with this email",
         },
         { status: 400 }
       );
@@ -24,23 +36,23 @@ export async function POST(request: Request) {
     // hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // create new user
     const newUser = new User({
       username,
       email,
       password: hashedPassword,
-    }).save();
+    });
 
     await newUser.save();
 
-    console.log("User created successfully:", newUser);
     return NextResponse.json(
       {
         success: true,
         message: "User created successfully",
+        user: newUser,
       },
       { status: 201 }
     );
-    
   } catch (error) {
     console.log("Error during user signup:", error);
     return NextResponse.json(
