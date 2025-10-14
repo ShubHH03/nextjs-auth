@@ -75,10 +75,10 @@ export default function SignupPage() {
                   onChange={(e) =>
                     setUser({ ...user, password: e.target.value })
                   }
-                  placeholder="********"
+                  placeholder="******"
                 />
                 <FieldDescription>
-                  Must be at least 8 characters long.
+                  Must be at least 6 characters long.
                 </FieldDescription>
               </Field>
             </FieldGroup>

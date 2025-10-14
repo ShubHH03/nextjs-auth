@@ -58,7 +58,7 @@ export default function LoginPage() {
                   onChange={(e) =>
                     setUser({ ...user, password: e.target.value })
                   }
-                  placeholder="********"
+                  placeholder="******"
                 />
               </Field>
             </FieldGroup>
