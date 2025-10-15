@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import React from "react";
-import { useRouter } from "next/navigation";
 import axios from "axios";
 import {
   Field,
@@ -14,6 +13,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect} from "react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [user, setUser] = React.useState({
@@ -22,6 +23,8 @@ export default function LoginPage() {
   });
 
   const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
     useEffect(() => {
       if(user.email.length > 0 && user.password.length > 0 ){
@@ -32,7 +35,25 @@ export default function LoginPage() {
       }
     }, [user]);
 
-  const onLogin = async () => {};
+  const onLogin = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.post("/api/users/login", user);
+      console.log("Login response:", response.data);
+      toast.success("Login successful!");
+      router.push("/profile");
+    } catch (error: any) {
+      console.log("Error during login:", error);
+
+      // Display specific error message from backend
+      const errorMessage = error.response?.data?.message || "Login failed. Please try again.";
+      toast.error(errorMessage);
+      
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-background to-muted/20">
       <div className="w-full max-w-md">
@@ -79,7 +100,7 @@ export default function LoginPage() {
           {/* Button */}
           <div className="mt-6">
             <Button onClick={onLogin} className="w-full cursor-pointer" size="lg" disabled={buttonDisabled}>
-              Log In
+             {loading ? "Processing..." : "Log In"}
             </Button>
           </div>
 
